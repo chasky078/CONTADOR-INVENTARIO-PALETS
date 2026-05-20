@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Pallet Count" />
+  <title>Pallet Count · Contador de Palets</title>
+  <style>
+    :root{
+      --bg:#07111f; --panel:#101c2d; --panel2:#14243a; --line:rgba(255,255,255,.12);
+      --txt:#f7fbff; --muted:#aebbd0; --green:#65d66e; --orange:#ff9d25; --red:#ff5d5d;
+      --shadow: 0 20px 50px rgba(0,0,0,.35); --radius:22px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#17345c 0,#07111f 42%,#03070d 100%);color:var(--txt);min-height:100vh;}
+    button,input,select,textarea{font:inherit} button{cursor:pointer;border:0;color:inherit} .hidden{display:none!important}
+    .app{max-width:520px;margin:0 auto;min-height:100vh;padding:16px 14px 86px}.top{display:flex;align-items:center;justify-content:space-between;margin:8px 0 18px}.brand{display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#ff9d25,#ff6b00);display:grid;place-items:center;font-size:26px;box-shadow:0 10px 30px rgba(255,157,37,.25)}h1{font-size:22px;margin:0;line-height:1.05}.sub{font-size:12px;color:var(--muted);margin-top:3px}.badge{font-size:11px;color:#07111f;background:var(--green);padding:7px 10px;border-radius:999px;font-weight:800}.card{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;backdrop-filter:blur(10px)}
+    .hero{min-height:310px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.75)),url('');opacity:.8}.hero>*{position:relative}.camBtn{width:132px;height:132px;border-radius:50%;background:#fff;color:#ff8c16;display:grid;place-items:center;font-size:58px;margin:10px auto 18px;box-shadow:0 18px 40px rgba(0,0,0,.45)}.primary{width:100%;padding:15px 18px;border-radius:16px;background:linear-gradient(135deg,#4bae55,#72db78);font-weight:900;color:#06130a;box-shadow:0 12px 24px rgba(101,214,110,.22)}.secondary{width:100%;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-weight:800}.danger{background:rgba(255,93,93,.16);color:#ffb3b3;border:1px solid rgba(255,93,93,.35)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small{font-size:13px;color:var(--muted)}.title{font-size:18px;font-weight:900;margin:0 0 10px}.orange{color:var(--orange)}
+    .screen{display:none}.screen.active{display:block}.photoBox{position:relative;background:#050911;border-radius:20px;overflow:hidden;border:1px solid var(--line);min-height:280px}canvas{display:block;width:100%;touch-action:none}.help{font-size:13px;color:var(--muted);line-height:1.4}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em}.field input,.field select,.field textarea{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:14px;color:var(--txt);padding:13px}.bigNumber{font-size:76px;font-weight:1000;text-align:center;color:var(--green);line-height:1}.counter{display:flex;align-items:center;justify-content:center;gap:18px;margin:22px 0}.round{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:30px}.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;color:var(--muted)}.bar{height:9px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;width:60%;background:linear-gradient(90deg,var(--green),var(--orange));border-radius:999px}.list{display:flex;flex-direction:column;gap:10px}.item{display:grid;grid-template-columns:74px 1fr auto;gap:12px;align-items:center;padding:10px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line)}.thumb{width:74px;height:74px;border-radius:12px;object-fit:cover;background:#111}.item strong{font-size:20px}.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(3,7,13,.86);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 10px max(8px,env(safe-area-inset-bottom));z-index:20}.navIn{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.tab{background:transparent;color:var(--muted);padding:8px 4px;border-radius:13px;font-size:11px;font-weight:800}.tab.active{background:rgba(255,157,37,.15);color:var(--orange)}.tab b{display:block;font-size:20px;margin-bottom:2px}.empty{text-align:center;color:var(--muted);padding:26px}.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#0f1d30;border:1px solid var(--line);box-shadow:var(--shadow);padding:12px 16px;border-radius:14px;z-index:99;font-weight:800}.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:16px;padding:14px}.stat b{font-size:28px;display:block}.steps{display:grid;gap:9px}.step{display:flex;gap:10px;align-items:flex-start}.num{width:26px;height:26px;border-radius:50%;background:var(--green);color:#06130a;display:grid;place-items:center;font-weight:1000;flex:0 0 26px}.miniBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.totalBox{background:linear-gradient(135deg,rgba(101,214,110,.18),rgba(255,157,37,.12));border:1px solid rgba(101,214,110,.35);border-radius:22px;padding:18px;text-align:center;margin-bottom:14px}.totalBox b{font-size:58px;display:block;color:var(--green);line-height:1}.inventoryItem{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line)}.inventoryItem strong{font-size:24px}.tag{font-size:11px;color:#07111f;background:var(--orange);padding:5px 8px;border-radius:999px;font-weight:900}
+  </style>
+</head>
+<body>
+  <input id="fileInput" type="file" accept="image/*" capture="environment" class="hidden" />
+  <div id="toast" class="toast hidden"></div>
+  <main class="app">
+    <header class="top"><div class="brand"><div class="logo">📦</div><div><h1>PALLET COUNT</h1><div class="sub">Contador asistido de palets</div></div></div><div class="badge">BETA</div></header>
+
+    <section id="home" class="screen active">
+      <div class="card hero"><button class="camBtn" onclick="startPhoto()">📷</button><h2>NUEVO CONTEO</h2><p class="small">Haz foto, ajusta la zona de la pila y la app hará una estimación. Luego corriges con + / -.</p><button class="primary" onclick="startPhoto()">Tomar foto / subir imagen</button><div style="height:10px"></div><button class="secondary" onclick="go('inventory')">Ver inventario actual</button></div>
+      <div class="card"><p class="title orange">Flujo rápido</p><div class="steps"><div class="step"><span class="num">1</span><span>Tomar foto de una pila centrada.</span></div><div class="step"><span class="num">2</span><span>Ajustar el recuadro verde a la pila.</span></div><div class="step"><span class="num">3</span><span>La app estima capas visibles.</span></div><div class="step"><span class="num">4</span><span>Corriges manualmente y guardas registro.</span></div></div></div>
+    </section>
+
+    <section id="capture" class="screen">
+      <div class="card"><p class="title">Ajustar zona de la pila</p><p class="help">Mueve el recuadro para que cubra solo la pila que quieres contar. Cuanto menos fondo, mejor.</p><div class="photoBox"><canvas id="canvas"></canvas></div><div class="miniBtns"><button class="secondary" onclick="go('home')">Cancelar</button><button class="primary" onclick="estimate()">Confirmar zona</button></div></div>
+    </section>
+
+    <section id="result" class="screen">
+      <div class="card"><p class="title">Estimación inicial</p><div class="bigNumber" id="estimateNumber">0</div><div style="text-align:center;margin-top:4px">palets</div><div style="margin:16px 0"><div class="row"><span class="pill" id="confidenceText">Confianza: media</span><span class="pill" id="methodText">Método: visual</span></div><div class="bar" style="margin-top:10px"><span id="confBar"></span></div></div><p class="help" id="debugText">Capas detectadas: 0</p><button class="primary" onclick="go('adjust')">Siguiente</button></div>
+    </section>
+
+    <section id="adjust" class="screen">
+      <div class="card"><p class="title">Ajustar cantidad</p><p class="help">Corrige si la app se equivoca. Esta beta está pensada como ayuda, no como conteo perfecto.</p><div class="counter"><button class="round" onclick="changeCount(-1)">−</button><div class="bigNumber" id="finalNumber">0</div><button class="round" onclick="changeCount(1)">+</button></div><div class="field"><label>Tipo de palet</label><select id="type"><option>Palet madera 1200 x 800</option><option>Palet madera 1200 x 1000</option><option>Palet pequeño</option><option>Palet grande</option><option>Personalizado</option></select></div><div class="row"><div class="field"><label>Ubicación</label><input id="location" placeholder="Ej: Almacén A - Calle 3"></div><div class="field"><label>Estado pila</label><select id="pileState"><option>Bien alineada</option><option>Torcida</option><option>Mezclada</option><option>Parcialmente tapada</option></select></div></div><div class="field"><label>Notas</label><textarea id="notes" rows="3" placeholder="Observaciones opcionales"></textarea></div><button class="primary" onclick="saveRecord()">Guardar y sumar al inventario</button><p class="help" style="margin-top:10px;text-align:center">Al guardar, esta pila se añade automáticamente al total actual.</p></div>
+    </section>
+
+    <section id="inventory" class="screen">
+      <div class="card">
+        <p class="title orange">Inventario actual</p>
+        <div class="totalBox"><span class="small">TOTAL SUMADO</span><b id="invTotal">0</b><span>palets</span></div>
+        <div class="grid2">
+          <button class="primary" onclick="startPhoto()">Añadir otra pila</button>
+          <button class="secondary" onclick="closeInventory()">Cerrar inventario</button>
+        </div>
+      </div>
+      <div class="card">
+        <p class="title">Pilas añadidas</p>
+        <div id="inventoryList" class="list"></div>
+      </div>
+      <div class="card">
+        <button class="secondary danger" onclick="clearInventory()">Vaciar inventario actual</button>
+      </div>
+    </section>
+
+    <section id="history" class="screen"><div class="card"><p class="title">Historial</p><div id="historyList" class="list"></div></div></section>
+    <section id="stats" class="screen"><div class="card"><p class="title">Estadísticas</p><div class="statGrid"><div class="stat"><span class="small">Conteos</span><b id="stCounts">0</b></div><div class="stat"><span class="small">Total palets</span><b id="stTotal">0</b></div><div class="stat"><span class="small">Media</span><b id="stAvg">0</b></div><div class="stat"><span class="small">Último</span><b id="stLast">-</b></div></div></div></section>
+    <section id="settings" class="screen"><div class="card"><p class="title">Ajustes</p><p class="help">Base funcional para seguir puliendo. Más adelante podemos añadir IA real, aprendizaje con correcciones, colores de palet, exportar PDF/CSV y modo jefe.</p><button class="secondary danger" onclick="clearAll()">Borrar todo el historial</button></div></section>
+  </main>
+
+  <nav class="nav"><div class="navIn"><button class="tab active" data-tab="home" onclick="go('home')"><b>⌂</b>Inicio</button><button class="tab" data-tab="inventory" onclick="go('inventory')"><b>Σ</b>Total</button><button class="tab" data-tab="history" onclick="go('history')"><b>◷</b>Historial</button><button class="tab" data-tab="stats" onclick="go('stats')"><b>▥</b>Stats</button><button class="tab" data-tab="settings" onclick="go('settings')"><b>⚙</b>Ajustes</button></div></nav>
+
+<script>
+const $ = s => document.querySelector(s);
+let img = new Image(), imgDataUrl = '', rect = {x:40,y:40,w:260,h:380}, dragging=false, dragMode='move', sx=0, sy=0, finalCount=0, lastEstimate=0, lastDebug={};
+const canvas = $('#canvas'), ctx = canvas.getContext('2d');
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),2200); }
+function go(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); $('#'+id).classList.add('active'); document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id)); if(id==='inventory') renderInventory(); if(id==='history') renderHistory(); if(id==='stats') renderStats(); window.scrollTo(0,0); }
+function startPhoto(){ $('#fileInput').click(); }
+$('#fileInput').addEventListener('change', e=>{ const file=e.target.files[0]; if(!file)return; const r=new FileReader(); r.onload=()=>{ imgDataUrl=r.result; img.onload=()=>{ setupCanvas(); go('capture'); }; img.src=imgDataUrl; }; r.readAsDataURL(file); e.target.value=''; });
+function setupCanvas(){ const maxW = Math.min(492, document.querySelector('.app').clientWidth-28); const ratio = img.height/img.width; canvas.width = maxW; canvas.height = Math.min(720, Math.round(maxW*ratio)); const pad=canvas.width*.12; rect={x:pad,y:canvas.height*.08,w:canvas.width-pad*2,h:canvas.height*.78}; draw(); }
+function draw(){ ctx.clearRect(0,0,canvas.width,canvas.height); const scale=Math.max(canvas.width/img.width, canvas.height/img.height); const iw=img.width*scale, ih=img.height*scale; const ox=(canvas.width-iw)/2, oy=(canvas.height-ih)/2; ctx.drawImage(img,ox,oy,iw,ih); ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.clearRect(rect.x,rect.y,rect.w,rect.h); ctx.drawImage(img,ox,oy,iw,ih,0,0,canvas.width,canvas.height); ctx.strokeStyle='#65d66e'; ctx.lineWidth=3; ctx.setLineDash([8,6]); ctx.strokeRect(rect.x,rect.y,rect.w,rect.h); ctx.setLineDash([]); ['tl','tr','bl','br'].forEach(c=>{ const p=corner(c); ctx.fillStyle='#65d66e'; ctx.beginPath(); ctx.arc(p.x,p.y,8,0,Math.PI*2); ctx.fill(); }); }
+function corner(c){ return {x:c.includes('r')?rect.x+rect.w:rect.x, y:c.includes('b')?rect.y+rect.h:rect.y}; }
+function pos(e){ const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:(t.clientX-r.left)*canvas.width/r.width, y:(t.clientY-r.top)*canvas.height/r.height}; }
+function down(e){ const p=pos(e); sx=p.x; sy=p.y; dragging=true; dragMode='move'; for(const c of ['tl','tr','bl','br']){ const q=corner(c); if(Math.hypot(p.x-q.x,p.y-q.y)<28){ dragMode=c; break; } } }
+function move(e){ if(!dragging)return; e.preventDefault(); const p=pos(e), dx=p.x-sx, dy=p.y-sy; if(dragMode==='move'){rect.x+=dx;rect.y+=dy}else{ if(dragMode.includes('l')){rect.x+=dx;rect.w-=dx} if(dragMode.includes('r')) rect.w+=dx; if(dragMode.includes('t')){rect.y+=dy;rect.h-=dy} if(dragMode.includes('b')) rect.h+=dy; } rect.w=Math.max(80,rect.w); rect.h=Math.max(120,rect.h); rect.x=Math.max(0,Math.min(canvas.width-rect.w,rect.x)); rect.y=Math.max(0,Math.min(canvas.height-rect.h,rect.y)); sx=p.x;sy=p.y; draw(); }
+function up(){ dragging=false; }
+canvas.addEventListener('mousedown',down); canvas.addEventListener('mousemove',move); window.addEventListener('mouseup',up); canvas.addEventListener('touchstart',down,{passive:false}); canvas.addEventListener('touchmove',move,{passive:false}); window.addEventListener('touchend',up);
+function estimate(){ const temp=document.createElement('canvas'), t=temp.getContext('2d'); temp.width=canvas.width; temp.height=canvas.height; t.drawImage(canvas,0,0); const x=Math.floor(rect.x), y=Math.floor(rect.y), w=Math.floor(rect.w), h=Math.floor(rect.h); const data=t.getImageData(x,y,w,h).data; const rows=[]; for(let yy=0; yy<h; yy++){ let sum=0; for(let xx=Math.floor(w*.08); xx<w*.92; xx+=2){ const i=(yy*w+xx)*4; const lum=.299*data[i]+.587*data[i+1]+.114*data[i+2]; sum += 255-lum; } rows.push(sum/(w*.42)); }
+  const smooth=rows.map((_,i)=>{let s=0,n=0; for(let k=-3;k<=3;k++){ if(rows[i+k]!=null){s+=rows[i+k];n++;}} return s/n;}); const avg=smooth.reduce((a,b)=>a+b,0)/smooth.length; const peaks=[]; const minDist=Math.max(10, Math.round(h/70)); for(let i=2;i<smooth.length-2;i++){ if(smooth[i]>avg*1.08 && smooth[i]>smooth[i-1] && smooth[i]>smooth[i+1]){ if(!peaks.length || i-peaks[peaks.length-1]>minDist) peaks.push(i); else if(smooth[i]>smooth[peaks[peaks.length-1]]) peaks[peaks.length-1]=i; } }
+  let count=peaks.length; if(count<3){ count=Math.round(h/24); }
+  count=Math.max(1,Math.min(120,count)); lastEstimate=count; finalCount=count; const conf = peaks.length>8?'Media':'Baja'; $('#estimateNumber').textContent=count; $('#finalNumber').textContent=count; $('#confidenceText').textContent='Confianza: '+conf; $('#confBar').style.width=conf==='Media'?'62%':'35%'; $('#debugText').textContent='Capas/líneas detectadas: '+peaks.length+' · Estimación beta: '+count; lastDebug={peaks:peaks.length, confidence:conf}; go('result'); }
+function changeCount(n){ finalCount=Math.max(0, finalCount+n); $('#finalNumber').textContent=finalCount; }
+function records(){ return JSON.parse(localStorage.getItem('palletCountRecords')||'[]'); }
+function saveRecords(a){ localStorage.setItem('palletCountRecords',JSON.stringify(a)); }
+function inventory(){ return JSON.parse(localStorage.getItem('palletCountInventory')||'[]'); }
+function saveInventory(a){ localStorage.setItem('palletCountInventory',JSON.stringify(a)); }
+function saveRecord(){ const rec={id:Date.now(), count:finalCount, estimate:lastEstimate, photo:imgDataUrl, type:$('#type').value, location:$('#location').value.trim()||'Sin ubicación', state:$('#pileState').value, notes:$('#notes').value.trim(), date:new Date().toLocaleString('es-ES'), debug:lastDebug}; const a=records(); a.unshift(rec); saveRecords(a); const inv=inventory(); inv.push({id:rec.id,count:rec.count,type:rec.type,location:rec.location,state:rec.state,date:rec.date,photo:rec.photo}); saveInventory(inv); toast('Pila guardada y sumada'); $('#location').value=''; $('#notes').value=''; go('inventory'); }
+function renderInventory(){ const a=inventory(), box=$('#inventoryList'); const total=a.reduce((s,r)=>s+Number(r.count||0),0); $('#invTotal').textContent=total; if(!a.length){ box.innerHTML='<div class="empty">Todavía no hay pilas en el inventario actual.<br><br>Haz un conteo y se irá sumando aquí.</div>'; return; } box.innerHTML=a.map((r,i)=>`<div class="inventoryItem"><div><span class="tag">PILA ${i+1}</span><br><strong>${r.count}</strong> palets<div class="small">${r.location}</div><div class="small">${r.type} · ${r.state}</div></div><button class="secondary danger" onclick="deleteInv(${r.id})">X</button></div>`).join(''); }
+function deleteInv(id){ if(!confirm('¿Quitar esta pila del inventario actual?'))return; saveInventory(inventory().filter(r=>r.id!==id)); renderInventory(); }
+function clearInventory(){ if(prompt('Escribe CONFIRMAR para vaciar el inventario actual')!=='CONFIRMAR')return; localStorage.removeItem('palletCountInventory'); renderInventory(); toast('Inventario actual vaciado'); }
+function closeInventory(){ const total=inventory().reduce((s,r)=>s+Number(r.count||0),0); if(!inventory().length){ toast('No hay pilas para cerrar'); return; } alert('Inventario cerrado\nTotal: '+total+' palets\n\nDe momento queda guardado en historial. Más adelante podemos exportarlo a PDF/CSV.'); }
+function renderHistory(){ const a=records(), box=$('#historyList'); if(!a.length){ box.innerHTML='<div class="empty">Todavía no hay registros guardados.</div>'; return; } box.innerHTML=a.map(r=>`<div class="item"><img class="thumb" src="${r.photo}"><div><strong>${r.count}</strong> palets<div class="small">${r.date}</div><div class="small">${r.location}</div></div><button class="secondary danger" onclick="deleteRec(${r.id})">X</button></div>`).join(''); }
+function deleteRec(id){ if(!confirm('¿Borrar este registro?'))return; saveRecords(records().filter(r=>r.id!==id)); renderHistory(); renderStats(); }
+function renderStats(){ const a=records(); const total=a.reduce((s,r)=>s+Number(r.count||0),0); $('#stCounts').textContent=a.length; $('#stTotal').textContent=total; $('#stAvg').textContent=a.length?(total/a.length).toFixed(1):0; $('#stLast').textContent=a[0]?a[0].count:'-'; }
+function clearAll(){ if(prompt('Escribe CONFIRMAR para borrar todo')!=='CONFIRMAR')return; localStorage.removeItem('palletCountRecords'); localStorage.removeItem('palletCountInventory'); renderHistory(); renderStats(); renderInventory(); toast('Historial e inventario borrados'); }
+</script>
+</body>
+</html>
