@@ -1,32 +1,201 @@
-CARPA · PALETS VACÍOS
-Inventario Palets
-Foto → conteo automático beta → combinación de tacos → inventario
-1. Foto de la pila
-SACAR FOTO
-SUBIR FOTO
-Sin foto todavía
-Haz foto o sube una imagen de una pila lo más frontal posible.
-Esperando imagen.
-2. Conteo automático beta
-ANALIZAR Y CONTAR SOLO
-Sensibilidad del detector
-Valor: 38. Si cuenta mal, mueve esto y vuelve a analizar.
-0
-Pendiente de análisis
-−
-GUARDAR
-+
-Esta primera versión NO es IA real. Detecta líneas/capas visibles y estima. La idea es que cuente solo y tú solo corrijas si falla.
-3. Combinación de tacos
-Izquierda
-Medio
-Derecha
----
-AMA · MAD · NAR
-AMA · NEG · AMA
-MAD · MAD · MAD
-ROJ · ROJ · ROJ
-Notas opcionales
-Contar
-Inventario
-Ayuda
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contador Palets Vacíos</title>
+<style>
+body{margin:0;font-family:system-ui;background:#07111f;color:white}
+.app{max-width:520px;margin:auto;padding:16px 14px 90px}
+h1{text-align:center;margin:10px 0 4px}
+.sub{text-align:center;color:#9eb0c8;font-size:14px;margin-bottom:16px}
+.card{background:#101d31;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:15px;margin:12px 0;box-shadow:0 15px 35px #0007}
+.btn{width:100%;border:0;border-radius:16px;padding:14px;font-weight:900;color:white;background:#2f80ff;font-size:15px}
+.btn2{background:#1b2b45}.green{background:#19b86a}.red{background:#d63b4a}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+select,input{width:100%;border:1px solid rgba(255,255,255,.15);background:#172842;color:white;border-radius:14px;padding:12px;font-size:15px}
+label{font-size:12px;color:#9eb0c8}
+canvas{width:100%;border-radius:18px;background:#050912;margin-top:10px}
+.big{text-align:center;font-size:58px;font-weight:950}
+.small{color:#9eb0c8;font-size:13px;text-align:center}
+.counter{display:grid;grid-template-columns:70px 1fr 70px;gap:10px}
+.round{border:0;border-radius:16px;background:#263957;color:white;font-size:30px;font-weight:900}
+.item{background:#172842;border-radius:16px;padding:12px;margin:8px 0}
+.tabs{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#050912ee;padding:8px}
+.tab{border:0;border-radius:14px;padding:12px;background:#172842;color:#9eb0c8;font-weight:900}.tab.active{background:#2f80ff;color:white}
+.screen{display:none}.screen.active{display:block}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Inventario Palets Vacíos</h1>
+<div class="sub">Foto → conteo automático beta → colores → guardar inventario</div>
+
+<section id="s1" class="screen active">
+<div class="card">
+<b>1. Foto de la pila</b><br><br>
+<div class="grid">
+<button class="btn" onclick="camera.click()">SACAR FOTO</button>
+<button class="btn btn2" onclick="gallery.click()">SUBIR FOTO</button>
+</div>
+<input id="camera" type="file" accept="image/*" capture="environment" hidden>
+<input id="gallery" type="file" accept="image/*" hidden>
+<canvas id="canvas"></canvas>
+<div class="small" id="photoMsg">Sin foto todavía</div>
+</div>
+
+<div class="card">
+<b>2. Contador automático beta</b><br><br>
+<button class="btn green" onclick="analyze()">ANALIZAR Y CONTAR SOLO</button>
+<br><br>
+<label>Sensibilidad</label>
+<input id="sens" type="range" min="15" max="80" value="38">
+<div class="small">Si cuenta mal, cambia sensibilidad y vuelve a analizar</div>
+<div class="big" id="countView">0</div>
+<div class="small" id="conf">Pendiente de análisis</div>
+<div class="counter">
+<button class="round" onclick="change(-1)">−</button>
+<button class="btn green" onclick="save()">GUARDAR</button>
+<button class="round" onclick="change(1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<b>3. Combinación de tacos</b><br><br>
+<div class="grid3">
+<div><label>Izquierda</label><select id="c1"></select></div>
+<div><label>Medio</label><select id="c2"></select></div>
+<div><label>Derecha</label><select id="c3"></select></div>
+</div>
+<br>
+<div class="grid">
+<button class="btn btn2" onclick="combo('Amarillo','Madera','Naranja')">AMA/MAD/NAR</button>
+<button class="btn btn2" onclick="combo('Madera','Madera','Madera')">MAD/MAD/MAD</button>
+</div>
+</div>
+</section>
+
+<section id="s2" class="screen">
+<div class="card">
+<b>Total inventario</b>
+<div class="big" id="total">0</div>
+<div class="small">palets vacíos registrados</div>
+<button class="btn red" onclick="clearAll()">BORRAR TODO</button>
+</div>
+<div class="card">
+<b>Totales por combinación</b>
+<div id="groups"></div>
+</div>
+<div class="card">
+<b>Historial</b>
+<div id="hist"></div>
+</div>
+</section>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="show('s1',this)">Contar</button>
+<button class="tab" onclick="show('s2',this)">Inventario</button>
+</div>
+
+<script>
+const colors=["Amarillo","Negro","Naranja","Rojo","Blanco","Azul","Verde","Madera"];
+[c1,c2,c3].forEach(s=>s.innerHTML=colors.map(c=>`<option>${c}</option>`).join(""));
+combo("Amarillo","Madera","Naranja");
+
+let img=new Image(), count=0;
+let records=JSON.parse(localStorage.getItem("paletsAuto")||"[]");
+
+camera.onchange=e=>load(e.target.files[0]);
+gallery.onchange=e=>load(e.target.files[0]);
+
+function load(file){
+ if(!file)return;
+ const r=new FileReader();
+ r.onload=e=>{
+  img.onload=()=>draw();
+  img.src=e.target.result;
+  photoMsg.textContent="Foto cargada. Pulsa ANALIZAR.";
+ };
+ r.readAsDataURL(file);
+}
+
+function draw(lines=[]){
+ const cv=canvas,ctx=cv.getContext("2d");
+ const w=900,h=650; cv.width=w; cv.height=h;
+ ctx.fillStyle="#050912";ctx.fillRect(0,0,w,h);
+ if(!img.src)return;
+ const scale=Math.min(w/img.width,h/img.height);
+ const iw=img.width*scale, ih=img.height*scale;
+ const x=(w-iw)/2,y=(h-ih)/2;
+ ctx.drawImage(img,x,y,iw,ih);
+ ctx.strokeStyle="#39d7ff";ctx.lineWidth=3;
+ lines.forEach(py=>{ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(w,py);ctx.stroke();});
+}
+
+function analyze(){
+ if(!img.src){alert("Primero saca o sube una foto.");return;}
+ const cv=canvas,ctx=cv.getContext("2d");
+ draw();
+ const w=cv.width,h=cv.height;
+ const data=ctx.getImageData(0,0,w,h).data;
+ let scores=[];
+ for(let y=2;y<h-2;y++){
+  let sum=0;
+  for(let x=Math.floor(w*.18);x<Math.floor(w*.82);x+=3){
+   let i=(y*w+x)*4, j=((y+2)*w+x)*4;
+   let g1=(data[i]+data[i+1]+data[i+2])/3;
+   let g2=(data[j]+data[j+1]+data[j+2])/3;
+   sum+=Math.abs(g2-g1);
+  }
+  scores[y]=sum;
+ }
+ let max=Math.max(...scores.filter(Boolean));
+ let threshold=max*(sens.value/100);
+ let peaks=[];
+ let minGap=18;
+ for(let y=8;y<h-8;y++){
+  if(scores[y]>threshold){
+   if(!peaks.length || y-peaks[peaks.length-1]>minGap) peaks.push(y);
+   else if(scores[y]>scores[peaks[peaks.length-1]]) peaks[peaks.length-1]=y;
+  }
+ }
+ peaks=peaks.filter(y=>y>45 && y<h-45);
+ draw(peaks);
+ count=Math.max(0,Math.round(peaks.length/2));
+ countView.textContent=count;
+ conf.textContent="Estimación automática beta: revisa y corrige con + / − si hace falta.";
+}
+
+function change(n){count=Math.max(0,count+n);countView.textContent=count;}
+function combo(a,b,c){c1.value=a;c2.value=b;c3.value=c;}
+function key(r){return `${r.c1} / ${r.c2} / ${r.c3}`;}
+
+function save(){
+ if(count<=0){alert("No hay cantidad detectada. Analiza o corrige con +.");return;}
+ records.unshift({id:Date.now(),qty:count,c1:c1.value,c2:c2.value,c3:c3.value,date:new Date().toLocaleString("es-ES")});
+ localStorage.setItem("paletsAuto",JSON.stringify(records));
+ alert("Guardado en inventario.");
+ count=0;countView.textContent=0;render();
+}
+
+function render(){
+ total.textContent=records.reduce((s,r)=>s+r.qty,0);
+ let g={};records.forEach(r=>g[key(r)]=(g[key(r)]||0)+r.qty);
+ groups.innerHTML=Object.keys(g).length?Object.keys(g).map(k=>`<div class="item"><b>${k}</b><br>${g[k]} palets</div>`).join(""):"<div class='small'>Sin datos</div>";
+ hist.innerHTML=records.length?records.map(r=>`<div class="item"><b>${key(r)}</b><br>${r.qty} palets<br><span class="small">${r.date}</span></div>`).join(""):"<div class='small'>Sin registros</div>";
+}
+
+function clearAll(){
+ if(prompt("Escribe BORRAR")!=="BORRAR")return;
+ records=[];localStorage.setItem("paletsAuto","[]");render();
+}
+function show(id,b){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+ document.getElementById(id).classList.add("active");b.classList.add("active");render();
+}
+render();
+</script>
+</body>
+</html>
