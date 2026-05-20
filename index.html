@@ -1,596 +1,380 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#07111f" />
-  <title>Contador de Palets</title>
-
-  <style>
-    :root{
-      --bg:#07111f;
-      --card:#101d31;
-      --card2:#14243c;
-      --blue:#2f80ff;
-      --cyan:#39d7ff;
-      --green:#24d17e;
-      --red:#ff4b5c;
-      --text:#f4f8ff;
-      --muted:#9eb0c8;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 18px 40px rgba(0,0,0,.35);
-    }
-
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at top,#173a65 0,#07111f 45%,#050912 100%);
-      color:var(--text);
-      min-height:100vh;
-    }
-
-    .app{
-      width:min(520px,100%);
-      margin:0 auto;
-      padding:18px 14px 80px;
-    }
-
-    .top{
-      text-align:center;
-      padding:22px 12px 16px;
-    }
-
-    .badge{
-      display:inline-block;
-      padding:6px 12px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      font-size:12px;
-      color:var(--cyan);
-      letter-spacing:.08em;
-      background:rgba(255,255,255,.05);
-    }
-
-    h1{
-      margin:14px 0 6px;
-      font-size:30px;
-      line-height:1.05;
-    }
-
-    .sub{
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card2));
-      border:1px solid var(--border);
-      border-radius:24px;
-      padding:16px;
-      margin:14px 0;
-      box-shadow:var(--shadow);
-    }
-
-    .section-title{
-      font-weight:800;
-      margin-bottom:10px;
-      font-size:15px;
-      letter-spacing:.04em;
-      color:#dceaff;
-    }
-
-    label{
-      display:block;
-      font-size:13px;
-      color:var(--muted);
-      margin:10px 0 6px;
-    }
-
-    input,select,textarea{
-      width:100%;
-      border:none;
-      outline:none;
-      border-radius:16px;
-      padding:14px;
-      background:rgba(255,255,255,.08);
-      color:var(--text);
-      border:1px solid var(--border);
-      font-size:16px;
-    }
-
-    textarea{min-height:70px;resize:vertical}
-
-    input[type="file"]{
-      padding:12px;
-      font-size:14px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .btn{
-      width:100%;
-      border:none;
-      border-radius:17px;
-      padding:15px 14px;
-      font-weight:900;
-      font-size:15px;
-      color:white;
-      background:linear-gradient(135deg,var(--blue),#185bd8);
-      box-shadow:0 12px 24px rgba(47,128,255,.22);
-      cursor:pointer;
-    }
-
-    .btn.secondary{
-      background:rgba(255,255,255,.08);
-      border:1px solid var(--border);
-      box-shadow:none;
-    }
-
-    .btn.green{
-      background:linear-gradient(135deg,var(--green),#11985a);
-    }
-
-    .btn.red{
-      background:linear-gradient(135deg,var(--red),#b91d32);
-    }
-
-    .photo-box{
-      margin-top:10px;
-      border:1px dashed rgba(255,255,255,.25);
-      border-radius:20px;
-      min-height:210px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      background:rgba(0,0,0,.22);
-      color:var(--muted);
-      text-align:center;
-      position:relative;
-    }
-
-    .photo-box img{
-      width:100%;
-      display:block;
-    }
-
-    .result{
-      text-align:center;
-      padding:12px;
-      background:rgba(255,255,255,.07);
-      border:1px solid var(--border);
-      border-radius:22px;
-    }
-
-    .big-number{
-      font-size:54px;
-      font-weight:950;
-      margin:4px 0;
-      color:#ffffff;
-    }
-
-    .small{
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .counter-row{
-      display:grid;
-      grid-template-columns:70px 1fr 70px;
-      gap:10px;
-      margin-top:12px;
-      align-items:center;
-    }
-
-    .round{
-      height:58px;
-      border-radius:18px;
-      border:none;
-      font-size:28px;
-      font-weight:900;
-      color:white;
-      background:rgba(255,255,255,.1);
-      border:1px solid var(--border);
-    }
-
-    .total-box{
-      text-align:center;
-      background:linear-gradient(135deg,rgba(57,215,255,.16),rgba(47,128,255,.16));
-      border:1px solid rgba(57,215,255,.35);
-      border-radius:24px;
-      padding:16px;
-      margin-top:10px;
-    }
-
-    .total-number{
-      font-size:48px;
-      font-weight:950;
-      color:#fff;
-    }
-
-    .pile-item{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      align-items:center;
-      background:rgba(255,255,255,.07);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:12px;
-      margin:8px 0;
-    }
-
-    .pile-title{
-      font-weight:800;
-    }
-
-    .pile-meta{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:4px;
-    }
-
-    .delete-small{
-      border:none;
-      border-radius:12px;
-      padding:9px 11px;
-      background:rgba(255,75,92,.18);
-      color:#ffb9c0;
-      font-weight:800;
-    }
-
-    .tabs{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      background:rgba(5,10,20,.92);
-      backdrop-filter:blur(14px);
-      border-top:1px solid var(--border);
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      width:min(520px,100%);
-      margin:0 auto;
-      padding:8px;
-      gap:8px;
-    }
-
-    .tab{
-      border:none;
-      border-radius:14px;
-      padding:11px 6px;
-      background:rgba(255,255,255,.08);
-      color:var(--muted);
-      font-weight:800;
-      font-size:13px;
-    }
-
-    .tab.active{
-      background:linear-gradient(135deg,var(--blue),#185bd8);
-      color:white;
-    }
-
-    .screen{display:none}
-    .screen.active{display:block}
-
-    .empty{
-      color:var(--muted);
-      text-align:center;
-      padding:22px 10px;
-      border:1px dashed var(--border);
-      border-radius:18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Inventario Palets Vacíos</title>
+<style>
+:root{
+  --bg:#07111f;--card:#101d31;--card2:#162842;--blue:#2f80ff;
+  --green:#20c878;--red:#ff4b5c;--text:#f4f8ff;--muted:#9eb0c8;
+  --border:rgba(255,255,255,.13);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  background:radial-gradient(circle at top,#173a65,#07111f 50%,#050912);
+  color:var(--text);min-height:100vh;
+}
+.app{width:min(520px,100%);margin:0 auto;padding:18px 14px 85px}
+.top{text-align:center;padding:18px 6px}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:6px 12px;color:#39d7ff;font-size:12px}
+h1{margin:12px 0 4px;font-size:28px}
+.sub{color:var(--muted);font-size:14px}
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:24px;padding:16px;margin:14px 0;
+  box-shadow:0 18px 40px rgba(0,0,0,.35)
+}
+.title{font-weight:900;margin-bottom:12px}
+label{display:block;color:var(--muted);font-size:13px;margin:10px 0 6px}
+input,select,textarea{
+  width:100%;border:none;outline:none;border-radius:16px;padding:14px;
+  background:rgba(255,255,255,.08);color:white;border:1px solid var(--border);font-size:16px
+}
+textarea{min-height:65px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{
+  width:100%;border:none;border-radius:17px;padding:15px 12px;font-weight:900;
+  color:white;background:linear-gradient(135deg,var(--blue),#185bd8);font-size:15px
+}
+.btn.green{background:linear-gradient(135deg,var(--green),#11985a)}
+.btn.red{background:linear-gradient(135deg,var(--red),#b91d32)}
+.btn.gray{background:rgba(255,255,255,.09);border:1px solid var(--border)}
+.photo{
+  min-height:220px;border:1px dashed rgba(255,255,255,.25);border-radius:20px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(0,0,0,.25);
+  color:var(--muted);text-align:center
+}
+.photo img{width:100%;display:block}
+.previewColors{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.colorBox{width:62px;height:42px;border-radius:12px;border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#111}
+.colorBox.madera{background:#c18a52}
+.colorBox.amarillo{background:#ffd21f}
+.colorBox.negro{background:#111;color:white}
+.colorBox.naranja{background:#ff7a18}
+.colorBox.rojo{background:#ff3030;color:white}
+.colorBox.blanco{background:#f5f5f5}
+.colorBox.azul{background:#2368ff;color:white}
+.colorBox.verde{background:#18b65a;color:white}
+.big{text-align:center;font-size:54px;font-weight:950;margin:8px 0}
+.counter{display:grid;grid-template-columns:70px 1fr 70px;gap:10px}
+.round{border:none;border-radius:18px;background:rgba(255,255,255,.1);color:white;font-size:28px;font-weight:900}
+.total{
+  text-align:center;border:1px solid rgba(57,215,255,.35);
+  background:rgba(57,215,255,.12);border-radius:22px;padding:16px
+}
+.totalNum{font-size:46px;font-weight:950}
+.item{
+  background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:18px;
+  padding:12px;margin:9px 0
+}
+.itemTop{display:flex;justify-content:space-between;gap:10px}
+.meta{color:var(--muted);font-size:12px;margin-top:4px}
+.smallBtn{border:none;border-radius:12px;padding:9px 10px;background:rgba(255,75,92,.18);color:#ffb9c0;font-weight:900}
+.tabs{
+  position:fixed;bottom:0;left:0;right:0;margin:0 auto;width:min(520px,100%);
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px;
+  background:rgba(5,10,20,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border)
+}
+.tab{border:none;border-radius:14px;padding:11px 6px;background:rgba(255,255,255,.08);color:var(--muted);font-weight:900}
+.tab.active{background:linear-gradient(135deg,var(--blue),#185bd8);color:white}
+.screen{display:none}.screen.active{display:block}
+.empty{text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:18px;padding:22px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+</style>
 </head>
-
 <body>
-  <div class="app">
-    <div class="top">
-      <div class="badge">BETA INDUSTRIAL</div>
-      <h1>Contador de Palets</h1>
-      <div class="sub">Foto + estimación + corrección manual + inventario</div>
+
+<div class="app">
+  <div class="top">
+    <div class="badge">CARPA · PALETS VACÍOS</div>
+    <h1>Inventario Palets</h1>
+    <div class="sub">Foto + colores de tacos + cantidad + suma por combinación</div>
+  </div>
+
+  <section id="countScreen" class="screen active">
+    <div class="card">
+      <div class="title">1. Foto de la pila</div>
+      <div class="grid">
+        <button class="btn" onclick="cameraInput.click()">SACAR FOTO</button>
+        <button class="btn gray" onclick="galleryInput.click()">SUBIR FOTO</button>
+      </div>
+      <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+      <input id="galleryInput" type="file" accept="image/*" hidden>
+      <div class="photo" id="photoBox" style="margin-top:12px">Sin foto todavía</div>
     </div>
 
-    <!-- PANTALLA CONTAR -->
-    <section id="screenCount" class="screen active">
-      <div class="card">
-        <div class="section-title">1. Foto de la pila</div>
-        <input id="photoInput" type="file" accept="image/*" capture="environment">
-        <div class="photo-box" id="photoBox">
-          <span>Sube o haz una foto de la pila de palets</span>
+    <div class="card">
+      <div class="title">2. Combinación de tacos</div>
+
+      <div class="grid3">
+        <div>
+          <label>Izquierda</label>
+          <select id="c1" onchange="updatePreview()"></select>
+        </div>
+        <div>
+          <label>Medio</label>
+          <select id="c2" onchange="updatePreview()"></select>
+        </div>
+        <div>
+          <label>Derecha</label>
+          <select id="c3" onchange="updatePreview()"></select>
         </div>
       </div>
 
-      <div class="card">
-        <div class="section-title">2. Datos de la pila</div>
-
-        <label>Nombre / zona / calle</label>
-        <input id="pileName" placeholder="Ej: Calle W 03 / Pila 1">
-
-        <div class="grid">
-          <div>
-            <label>Tipo de palet</label>
-            <select id="palletType">
-              <option>Normal</option>
-              <option>Pequeño</option>
-              <option>Grande</option>
-              <option>Mezclado</option>
-              <option>Otro</option>
-            </select>
-          </div>
-
-          <div>
-            <label>Estado pila</label>
-            <select id="pileState">
-              <option>Bien alineada</option>
-              <option>Algo torcida</option>
-              <option>Muy torcida</option>
-              <option>Tapada parcialmente</option>
-            </select>
-          </div>
-        </div>
-
-        <label>Cantidad estimada / manual</label>
-        <input id="manualCount" type="number" inputmode="numeric" min="0" placeholder="Ej: 32">
-
-        <label>Notas</label>
-        <textarea id="notes" placeholder="Ej: pila del fondo, revisar cantidad..."></textarea>
-
-        <button class="btn" onclick="estimateCount()">ESTIMAR BETA</button>
+      <div class="previewColors">
+        <div id="p1" class="colorBox">-</div>
+        <div id="p2" class="colorBox">-</div>
+        <div id="p3" class="colorBox">-</div>
       </div>
 
-      <div class="card">
-        <div class="section-title">3. Resultado</div>
-
-        <div class="result">
-          <div class="small">Cantidad actual</div>
-          <div class="big-number" id="currentCount">0</div>
-          <div class="small" id="confidenceText">Confianza: pendiente</div>
-        </div>
-
-        <div class="counter-row">
-          <button class="round" onclick="changeCount(-1)">−</button>
-          <button class="btn green" onclick="savePile()">GUARDAR Y SUMAR</button>
-          <button class="round" onclick="changeCount(1)">+</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- PANTALLA INVENTARIO -->
-    <section id="screenInventory" class="screen">
-      <div class="card">
-        <div class="section-title">Inventario actual</div>
-
-        <div class="total-box">
-          <div class="small">TOTAL GENERAL</div>
-          <div class="total-number" id="totalGeneral">0</div>
-          <div class="small">palets sumados</div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="grid">
-          <button class="btn secondary" onclick="exportInventory()">EXPORTAR TEXTO</button>
-          <button class="btn red" onclick="clearInventory()">BORRAR TODO</button>
-        </div>
+      <div class="quick">
+        <button class="btn gray" onclick="setCombo('Amarillo','Madera','Naranja')">Amarillo · Madera · Naranja</button>
+        <button class="btn gray" onclick="setCombo('Amarillo','Negro','Amarillo')">Amarillo · Negro · Amarillo</button>
+        <button class="btn gray" onclick="setCombo('Madera','Madera','Madera')">Madera · Madera · Madera</button>
+        <button class="btn gray" onclick="setCombo('Rojo','Rojo','Rojo')">Rojo · Rojo · Rojo</button>
       </div>
 
-      <div class="card">
-        <div class="section-title">Pilas guardadas</div>
-        <div id="pileList"></div>
-      </div>
-    </section>
+      <label>Cantidad de palets en esta pila</label>
+      <input id="qty" type="number" inputmode="numeric" min="0" placeholder="Ej: 32">
 
-    <!-- PANTALLA AYUDA -->
-    <section id="screenHelp" class="screen">
-      <div class="card">
-        <div class="section-title">Cómo usar</div>
-        <p class="small">
-          Esta primera versión es una beta: no usa IA real todavía.
-          Sirve para registrar pilas, estimar cantidades, corregirlas y sumar inventario.
-        </p>
-        <p class="small">
-          Flujo recomendado: haces foto → pones zona/calle → estimas o escribes cantidad →
-          corriges con + / − → guardas y se suma al total.
-        </p>
+      <div class="big" id="qtyView">0</div>
+      <div class="counter">
+        <button class="round" onclick="changeQty(-1)">−</button>
+        <button class="btn green" onclick="savePile()">GUARDAR Y SUMAR</button>
+        <button class="round" onclick="changeQty(1)">+</button>
       </div>
 
-      <div class="card">
-        <div class="section-title">Futuro de super app</div>
-        <p class="small">
-          Más adelante podemos añadir detección visual real, conteo por capas,
-          colores de palet, exportar PDF, filtros por calle, historial por día,
-          modo carretillero y dashboard.
-        </p>
+      <label>Notas opcionales</label>
+      <textarea id="notes" placeholder="Ej: pila torcida, revisar arriba..."></textarea>
+    </div>
+  </section>
+
+  <section id="inventoryScreen" class="screen">
+    <div class="card">
+      <div class="title">Inventario total</div>
+      <div class="total">
+        <div class="meta">TOTAL GENERAL</div>
+        <div class="totalNum" id="totalNum">0</div>
+        <div class="meta">palets vacíos registrados</div>
       </div>
-    </section>
-  </div>
+      <div class="grid" style="margin-top:12px">
+        <button class="btn gray" onclick="copySummary()">COPIAR RESUMEN</button>
+        <button class="btn red" onclick="clearAll()">BORRAR TODO</button>
+      </div>
+    </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="showScreen('count', this)">Contar</button>
-    <button class="tab" onclick="showScreen('inventory', this)">Inventario</button>
-    <button class="tab" onclick="showScreen('help', this)">Ayuda</button>
-  </div>
+    <div class="card">
+      <div class="title">Totales por combinación</div>
+      <div id="groupList"></div>
+    </div>
 
-  <script>
-    let currentCount = 0;
-    let currentPhoto = "";
-    let piles = JSON.parse(localStorage.getItem("contadorPalets_piles") || "[]");
+    <div class="card">
+      <div class="title">Historial de pilas</div>
+      <div id="historyList"></div>
+    </div>
+  </section>
 
-    const photoInput = document.getElementById("photoInput");
-    const photoBox = document.getElementById("photoBox");
+  <section id="helpScreen" class="screen">
+    <div class="card">
+      <div class="title">Cómo funciona</div>
+      <p class="meta">
+        Esta beta está pensada para palets vacíos colocados en la carpa.
+        Seleccionas los 3 tacos: izquierda, medio y derecha.
+      </p>
+      <p class="meta">
+        MADERA cuenta como opción válida. Lo normal es que sea el taco central,
+        salvo el formato especial Madera · Madera · Madera.
+      </p>
+      <p class="meta">
+        Más adelante se podrá estudiar detección automática por foto e integración con la app de búsqueda de palets.
+      </p>
+    </div>
+  </section>
+</div>
 
-    photoInput.addEventListener("change", function(){
-      const file = this.files[0];
-      if(!file) return;
+<div class="tabs">
+  <button class="tab active" onclick="show('countScreen',this)">Contar</button>
+  <button class="tab" onclick="show('inventoryScreen',this)">Inventario</button>
+  <button class="tab" onclick="show('helpScreen',this)">Ayuda</button>
+</div>
 
-      const reader = new FileReader();
-      reader.onload = function(e){
-        currentPhoto = e.target.result;
-        photoBox.innerHTML = `<img src="${currentPhoto}" alt="Foto de pila">`;
-      };
-      reader.readAsDataURL(file);
-    });
+<script>
+const colors = ["Amarillo","Negro","Naranja","Rojo","Blanco","Azul","Verde","Madera"];
+const classMap = {
+  "Amarillo":"amarillo","Negro":"negro","Naranja":"naranja","Rojo":"rojo",
+  "Blanco":"blanco","Azul":"azul","Verde":"verde","Madera":"madera"
+};
 
-    function showScreen(screen, btn){
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+let records = JSON.parse(localStorage.getItem("paletsCarpa_records") || "[]");
+let currentPhoto = "";
 
-      if(screen === "count") document.getElementById("screenCount").classList.add("active");
-      if(screen === "inventory") document.getElementById("screenInventory").classList.add("active");
-      if(screen === "help") document.getElementById("screenHelp").classList.add("active");
+function init(){
+  ["c1","c2","c3"].forEach(id=>{
+    const s=document.getElementById(id);
+    s.innerHTML = colors.map(c=>`<option>${c}</option>`).join("");
+  });
+  setCombo("Amarillo","Madera","Naranja");
+  render();
+}
+init();
 
-      btn.classList.add("active");
-      renderInventory();
-    }
+cameraInput.addEventListener("change", e => loadPhoto(e.target.files[0]));
+galleryInput.addEventListener("change", e => loadPhoto(e.target.files[0]));
 
-    function estimateCount(){
-      const manual = parseInt(document.getElementById("manualCount").value, 10);
+function loadPhoto(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentPhoto = e.target.result;
+    photoBox.innerHTML = `<img src="${currentPhoto}">`;
+  };
+  reader.readAsDataURL(file);
+}
 
-      if(!isNaN(manual) && manual >= 0){
-        currentCount = manual;
-        document.getElementById("confidenceText").textContent = "Confianza: alta (cantidad manual)";
-      }else{
-        // Estimación beta simulada para tener base funcional.
-        // Más adelante aquí meteremos detección por imagen.
-        currentCount = 25;
-        document.getElementById("confidenceText").textContent = "Confianza: baja (estimación beta)";
-      }
+qty.addEventListener("input",()=>{
+  qtyView.textContent = Number(qty.value || 0);
+});
 
-      updateCurrentCount();
-    }
+function show(id,btn){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+  render();
+}
 
-    function changeCount(amount){
-      currentCount += amount;
-      if(currentCount < 0) currentCount = 0;
-      document.getElementById("manualCount").value = currentCount;
-      updateCurrentCount();
-    }
+function setCombo(a,b,c){
+  c1.value=a;c2.value=b;c3.value=c;
+  updatePreview();
+}
 
-    function updateCurrentCount(){
-      document.getElementById("currentCount").textContent = currentCount;
-    }
+function updatePreview(){
+  [["p1",c1.value],["p2",c2.value],["p3",c3.value]].forEach(([id,val])=>{
+    const el=document.getElementById(id);
+    el.className="colorBox "+classMap[val];
+    el.textContent=val;
+  });
+}
 
-    function savePile(){
-      const name = document.getElementById("pileName").value.trim() || `Pila ${piles.length + 1}`;
-      const type = document.getElementById("palletType").value;
-      const state = document.getElementById("pileState").value;
-      const notes = document.getElementById("notes").value.trim();
+function comboKey(r=null){
+  const a = r ? r.c1 : c1.value;
+  const b = r ? r.c2 : c2.value;
+  const c = r ? r.c3 : c3.value;
+  return `${a} / ${b} / ${c}`;
+}
 
-      if(currentCount <= 0){
-        alert("Mete o estima una cantidad antes de guardar.");
-        return;
-      }
+function changeQty(n){
+  let v = Number(qty.value || 0) + n;
+  if(v < 0) v = 0;
+  qty.value = v;
+  qtyView.textContent = v;
+}
 
-      const pile = {
-        id: Date.now(),
-        name,
-        count: currentCount,
-        type,
-        state,
-        notes,
-        photo: currentPhoto,
-        date: new Date().toLocaleString("es-ES")
-      };
+function savePile(){
+  const amount = Number(qty.value || 0);
+  if(amount <= 0){
+    alert("Mete la cantidad de palets antes de guardar.");
+    return;
+  }
 
-      piles.unshift(pile);
-      localStorage.setItem("contadorPalets_piles", JSON.stringify(piles));
+  const rec = {
+    id: Date.now(),
+    c1:c1.value,c2:c2.value,c3:c3.value,
+    qty:amount,
+    notes:notes.value.trim(),
+    photo:currentPhoto,
+    date:new Date().toLocaleString("es-ES")
+  };
 
-      alert("Pila guardada y sumada al inventario.");
+  records.unshift(rec);
+  localStorage.setItem("paletsCarpa_records", JSON.stringify(records));
 
-      document.getElementById("pileName").value = "";
-      document.getElementById("manualCount").value = "";
-      document.getElementById("notes").value = "";
-      currentCount = 0;
-      updateCurrentCount();
-      document.getElementById("confidenceText").textContent = "Confianza: pendiente";
-    }
+  qty.value="";
+  qtyView.textContent="0";
+  notes.value="";
+  alert("Pila guardada y sumada al inventario.");
+  render();
+}
 
-    function renderInventory(){
-      const total = piles.reduce((sum, p) => sum + Number(p.count || 0), 0);
-      document.getElementById("totalGeneral").textContent = total;
+function render(){
+  const total = records.reduce((s,r)=>s+Number(r.qty),0);
+  totalNum.textContent = total;
 
-      const list = document.getElementById("pileList");
+  const groups = {};
+  records.forEach(r=>{
+    const k = comboKey(r);
+    groups[k] = (groups[k] || 0) + Number(r.qty);
+  });
 
-      if(piles.length === 0){
-        list.innerHTML = `<div class="empty">Aún no hay pilas guardadas.</div>`;
-        return;
-      }
+  const groupKeys = Object.keys(groups);
+  groupList.innerHTML = groupKeys.length ? groupKeys.map(k=>`
+    <div class="item">
+      <div class="itemTop">
+        <b>${escapeHtml(k)}</b>
+        <b>${groups[k]} palets</b>
+      </div>
+    </div>
+  `).join("") : `<div class="empty">Aún no hay combinaciones guardadas.</div>`;
 
-      list.innerHTML = piles.map(p => `
-        <div class="pile-item">
-          <div>
-            <div class="pile-title">${escapeHtml(p.name)} — ${p.count} palets</div>
-            <div class="pile-meta">${escapeHtml(p.type)} · ${escapeHtml(p.state)} · ${escapeHtml(p.date)}</div>
-            ${p.notes ? `<div class="pile-meta">Nota: ${escapeHtml(p.notes)}</div>` : ""}
-          </div>
-          <button class="delete-small" onclick="deletePile(${p.id})">Borrar</button>
+  historyList.innerHTML = records.length ? records.map(r=>`
+    <div class="item">
+      <div class="itemTop">
+        <div>
+          <b>${escapeHtml(comboKey(r))}</b>
+          <div class="meta">${r.qty} palets · ${escapeHtml(r.date)}</div>
+          ${r.notes ? `<div class="meta">Nota: ${escapeHtml(r.notes)}</div>` : ""}
         </div>
-      `).join("");
-    }
+        <button class="smallBtn" onclick="deleteOne(${r.id})">Borrar</button>
+      </div>
+    </div>
+  `).join("") : `<div class="empty">Aún no hay pilas registradas.</div>`;
+}
 
-    function deletePile(id){
-      if(!confirm("¿Borrar esta pila del inventario?")) return;
-      piles = piles.filter(p => p.id !== id);
-      localStorage.setItem("contadorPalets_piles", JSON.stringify(piles));
-      renderInventory();
-    }
+function deleteOne(id){
+  if(!confirm("¿Borrar este registro?")) return;
+  records = records.filter(r=>r.id!==id);
+  localStorage.setItem("paletsCarpa_records", JSON.stringify(records));
+  render();
+}
 
-    function clearInventory(){
-      const ok = prompt("Para borrar todo escribe BORRAR");
-      if(ok !== "BORRAR") return;
+function clearAll(){
+  const ok = prompt("Para borrar todo escribe BORRAR");
+  if(ok !== "BORRAR") return;
+  records = [];
+  localStorage.setItem("paletsCarpa_records", JSON.stringify(records));
+  render();
+}
 
-      piles = [];
-      localStorage.setItem("contadorPalets_piles", JSON.stringify(piles));
-      renderInventory();
-    }
+function copySummary(){
+  if(!records.length){alert("No hay datos.");return;}
+  const groups = {};
+  records.forEach(r=>{
+    const k=comboKey(r);
+    groups[k]=(groups[k]||0)+Number(r.qty);
+  });
 
-    function exportInventory(){
-      if(piles.length === 0){
-        alert("No hay inventario para exportar.");
-        return;
-      }
+  let txt="INVENTARIO PALETS VACÍOS - CARPA\n\n";
+  let total=0;
+  Object.keys(groups).forEach(k=>{
+    txt += `${k}: ${groups[k]} palets\n`;
+    total += groups[k];
+  });
+  txt += `\nTOTAL GENERAL: ${total} palets`;
 
-      const total = piles.reduce((sum, p) => sum + Number(p.count || 0), 0);
+  navigator.clipboard.writeText(txt).then(()=>{
+    alert("Resumen copiado.");
+  }).catch(()=>{
+    alert(txt);
+  });
+}
 
-      let text = "INVENTARIO PALETS\\n";
-      text += "=================\\n";
-      text += "Total general: " + total + " palets\\n\\n";
-
-      piles.forEach((p, i) => {
-        text += `${i + 1}. ${p.name}\\n`;
-        text += `Cantidad: ${p.count}\\n`;
-        text += `Tipo: ${p.type}\\n`;
-        text += `Estado: ${p.state}\\n`;
-        text += `Fecha: ${p.date}\\n`;
-        if(p.notes) text += `Notas: ${p.notes}\\n`;
-        text += "\\n";
-      });
-
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Inventario copiado al portapapeles.");
-      }).catch(() => {
-        alert(text);
-      });
-    }
-
-    function escapeHtml(text){
-      return String(text)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    renderInventory();
-  </script>
+function escapeHtml(t){
+  return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+</script>
 </body>
 </html>
